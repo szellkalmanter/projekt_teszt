@@ -72,7 +72,7 @@ else:
 
     # --- IDE KERÜLT AZ ÚJ OLDALRA ÁTVIVŐ GOMB ---
     st.info("Sikeresen bent vagy a rendszerben!")
-    st.page_link("menuvalaszto.py", label="Kattints ide a Menüválasztó megnyitásához",)
+    st.page_link("pages/menuvalaszto.py", label="Kattints ide a Menüválasztó megnyitásához",)
     st.divider()
 
     # Három fül: Adatok, Riportok ÉS a Biztonsági Kamera fül
