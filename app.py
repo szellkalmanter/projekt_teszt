@@ -50,7 +50,7 @@ if not st.session_state['bejelentkezve']:
     
     if st.button("Belépés"):
         # ERŐS JELSZAVAK: Ezt írjátok be majd a belépéshez!
-        if felhasznalonev == "admin" and jelszo == "K9!fX_7zR$wQ2":
+        if felhasznalonev == "Ricsi" and jelszo == "K9!fX_7zR$wQ2":
             st.session_state['bejelentkezve'] = True
             log_bejelentezes("admin") # NAPLÓZÁS INDÍTÁSA
             st.rerun()
