@@ -62,16 +62,18 @@ if not st.session_state['bejelentkezve']:
             st.error("Hibás felhasználónév vagy jelszó!")
 
 # --- 3. Fő alkalmazás fázis (Sikeres belépés után) ---
-
-        except FileNotFoundError:
-            st.info("Még nem történt bejelentkezés (a napló üres).")
 else:
-    st.title("Menüválasztó")
-    st.sidebar.write(f"Bejelentkezve: **Cigány!**")
+    st.title("Főoldal")
+    st.sidebar.write(f"Bejelentkezve: **Sikeres!**")
     
     if st.sidebar.button("Kijelentkezés"):
         st.session_state['bejelentkezve'] = False
         st.rerun()
+
+    # --- IDE KERÜLT AZ ÚJ OLDALRA ÁTVIVŐ GOMB ---
+    st.info("Sikeresen bent vagy a rendszerben!")
+    st.page_link("Menüválasztó.py", label="Kattints ide a Menüválasztó megnyitásához", icon="➡️")
+    st.divider()
 
     # Három fül: Adatok, Riportok ÉS a Biztonsági Kamera fül
     tab1, tab2, tab3 = st.tabs(["📊 Adatok megtekintése", "⚙️ Excel Riport export", "🛡️ Biztonsági Napló (Logok)"])
@@ -99,7 +101,7 @@ else:
             mime='text/csv',
         )
 
-    # ITT A REJTETT KAMERA FÜL: Csak a sikeresen belépett adminok látják!
+    # ITT A REJTETT KAMERA FÜL: Itt már tökéletes a try-except párosítás!
     with tab3:
         st.header("🛡️ Rendszer-hozzáférési napló")
         st.write("Itt láthatjátok, ki és mikor lépett be a rendszerbe.")
@@ -107,5 +109,5 @@ else:
             with open("log.txt", "r", encoding="utf-8") as f:
                 logok = f.read()
             st.text(logok) # Kiírja a belépési listát a képernyőre
-
-
+        except FileNotFoundError:
+            st.info("Még nem történt bejelentkezés (a napló üres).")
