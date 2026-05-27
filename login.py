@@ -62,47 +62,6 @@ if not st.session_state['bejelentkezve']:
             st.error("Hibás felhasználónév vagy jelszó!")
 
 # --- 3. Fő alkalmazás fázis (Sikeres belépés után) ---
-else:
-    st.title("🏢 Központi Back Office Dashboard")
-    st.sidebar.write(f"Bejelentkezve: **Szuper Admin**")
-    
-    if st.sidebar.button("Kijelentkezés"):
-        st.session_state['bejelentkezve'] = False
-        st.rerun()
 
-    # Három fül: Adatok, Riportok ÉS a Biztonsági Kamera fül
-    tab1, tab2, tab3 = st.tabs(["📊 Adatok megtekintése", "⚙️ Excel Riport export", "🛡️ Biztonsági Napló (Logok)"])
-
-    if 'adatok' not in st.session_state:
-        st.session_state['adatok'] = generalj_teszt_adatokat()
-
-    with tab1:
-        st.header("Ügyfél és Ügylet adatok")
-        st.dataframe(st.session_state['adatok'], use_container_width=True)
-
-    with tab2:
-        st.header("Rendszerfunkciók")
-        if st.button("🔄 Új tesztadatok generálása"):
-            st.session_state['adatok'] = generalj_teszt_adatokat()
-            st.success("Adatbázis frissítve!")
-            st.rerun()
-        
-        st.write("---")
-        df = st.session_state['adatok']
-        st.download_button(
-            label="📥 Excel jelentés letöltése",
-            data=df.to_csv(index=False).encode('utf-8-sig'),
-            file_name='backoffice_ugylet_riport.csv',
-            mime='text/csv',
-        )
-
-    # ITT A REJTETT KAMERA FÜL: Csak a sikeresen belépett adminok látják!
-    with tab3:
-        st.header("🛡️ Rendszer-hozzáférési napló")
-        st.write("Itt láthatjátok, ki és mikor lépett be a rendszerbe.")
-        try:
-            with open("log.txt", "r", encoding="utf-8") as f:
-                logok = f.read()
-            st.text(logok) # Kiírja a belépési listát a képernyőre
         except FileNotFoundError:
             st.info("Még nem történt bejelentkezés (a napló üres).")
