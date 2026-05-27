@@ -1,3 +1,4 @@
+Python
 import streamlit as st
 import pandas as pd
 from faker import Faker
@@ -49,14 +50,14 @@ if not st.session_state['bejelentkezve']:
     jelszo = st.text_input("Jelszó", type="password")
     
     if st.button("Belépés"):
-        # ERŐS JELSZAVAK: Ezt írjátok be majd a belépéshez!
+        # ERŐS JELSZAVAK
         if felhasznalonev == "Ricsi" and jelszo == "^ZazX^{K697|":
             st.session_state['bejelentkezve'] = True
-            log_bejelentezes("admin") # NAPLÓZÁS INDÍTÁSA
+            log_bejelentezes("admin")
             st.rerun()
         elif felhasznalonev == "Boti" and jelszo == "8k=8Q4Lk>|6+":
             st.session_state['bejelentkezve'] = True
-            log_bejelentezes("barat") # NAPLÓZÁS INDÍTÁSA
+            log_bejelentezes("barat")
             st.rerun()
         else:
             st.error("Hibás felhasználónév vagy jelszó!")
@@ -64,19 +65,21 @@ if not st.session_state['bejelentkezve']:
 # --- 3. Fő alkalmazás fázis (Sikeres belépés után) ---
 else:
     st.title("Főoldal")
-    st.sidebar.write(f"Bejelentkezve: **Sikeres!**")
+    st.sidebar.write("Bejelentkezve: **Sikeres!**")
     
     if st.sidebar.button("Kijelentkezés"):
         st.session_state['bejelentkezve'] = False
         st.rerun()
 
-    # --- IDE KERÜLT AZ ÚJ OLDALRA ÁTVIVŐ GOMB ---
     st.info("Sikeresen bent vagy a rendszerben!")
-    st.page_link("pages/menuvalaszto.py", label="Kattints ide a Menüválasztó megnyitásához",)
-    st.switch_page("pages/menuvalaszto.py")
+    
+    # Modern, kőbiztos átirányítás a menüválasztóra
+    if st.button("Kattints ide a Menüválasztó megnyitásához ➡️"):
+        st.switch_page("pages/menuvalaszto.py")
+        
     st.divider()
 
-    # Három fül: Adatok, Riportok ÉS a Biztonsági Kamera fül
+    # Három fül: Adatok, Riportok és a Biztonsági Napló
     tab1, tab2, tab3 = st.tabs(["📊 Adatok megtekintése", "⚙️ Excel Riport export", "🛡️ Biztonsági Napló (Logok)"])
 
     if 'adatok' not in st.session_state:
@@ -102,13 +105,12 @@ else:
             mime='text/csv',
         )
 
-    # ITT A REJTETT KAMERA FÜL: Itt már tökéletes a try-except párosítás!
     with tab3:
         st.header("🛡️ Rendszer-hozzáférési napló")
         st.write("Itt láthatjátok, ki és mikor lépett be a rendszerbe.")
         try:
             with open("log.txt", "r", encoding="utf-8") as f:
                 logok = f.read()
-            st.text(logok) # Kiírja a belépési listát a képernyőre
+            st.text(logok)
         except FileNotFoundError:
             st.info("Még nem történt bejelentkezés (a napló üres).")
