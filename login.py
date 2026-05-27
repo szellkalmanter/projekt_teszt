@@ -65,10 +65,9 @@ if not st.session_state['bejelentkezve']:
 
         except FileNotFoundError:
             st.info("Még nem történt bejelentkezés (a napló üres).")
-
-
-    st.title("🏢 Központi Back Office Dashboard")
-    st.sidebar.write(f"Bejelentkezve: **Szuper Admin**")
+else:
+    st.title("Menüválasztó")
+    st.sidebar.write(f"Bejelentkezve: **Cigány!**")
     
     if st.sidebar.button("Kijelentkezés"):
         st.session_state['bejelentkezve'] = False
@@ -108,3 +107,5 @@ if not st.session_state['bejelentkezve']:
             with open("log.txt", "r", encoding="utf-8") as f:
                 logok = f.read()
             st.text(logok) # Kiírja a belépési listát a képernyőre
+
+
