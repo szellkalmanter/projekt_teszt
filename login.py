@@ -63,7 +63,7 @@ if not st.session_state['bejelentkezve']:
 
 # --- 3. Fő alkalmazás fázis (Sikeres belépés után) ---
 
-except FileNotFoundError:
+        except FileNotFoundError:
             st.info("Még nem történt bejelentkezés (a napló üres).")
 else:
     st.title("Menüválasztó")
