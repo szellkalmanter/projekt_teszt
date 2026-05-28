@@ -3,6 +3,7 @@ import pandas as pd
 from faker import Faker
 import random
 from datetime import datetime
+import os
 st.set_page_config(
     page_title="Back Office Rendszer",
     initial_sidebar_state="collapsed"  # Ez gyárilag, teljesen bezárva tartja a sidebart indításkor
