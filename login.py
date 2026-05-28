@@ -3,7 +3,9 @@ import pandas as pd
 from faker import Faker
 import random
 from datetime import datetime
-
+st.set_page_config(
+    initial_sidebar_state="collapsed"
+)
 # --- BIZTONSÁGI NAPLÓZÓ FUNKCIÓ ---
 def log_bejelentezes(felhasznalonev):
     # Lekérjük az időpontot
