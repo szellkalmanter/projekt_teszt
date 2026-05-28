@@ -33,6 +33,17 @@ def generalj_teszt_adatokat():
 
 # --- 1. Bejelentkező képernyő fázis ---
 if 'bejelentkezve' not in st.session_state:
+    st.markdown(
+        """
+        <style>
+            [data-testid="stSidebar"] {display: none !important;}
+            [data-testid="stSidebarCollapseButton"] {display: none !important;}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    st.title("🔒 Back Office Rendszer - Belépés")
+    st.subheader("Kérjük, adja meg a biztonságos belépési adatokat")
     st.session_state['bejelentkezve'] = False
 
 if not st.session_state['bejelentkezve']:
