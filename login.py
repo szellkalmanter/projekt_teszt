@@ -88,7 +88,7 @@ else:
     
     # Navigációs gomb a menüválasztó aloldalra
     if st.button("Kattints ide a Menüválasztó megnyitásához ➡️"):
-        st.switch_page("pages/menuvalaszto.py")
+        st.switch_page("oldalak/menuvalaszto.py")
         
     st.divider()
 
