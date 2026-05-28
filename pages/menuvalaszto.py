@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.title("🎛️ Menüválasztó Oldal")
-if st.write("Vállalati hitel nyilvántartás")
+if st.button("Vállalati hitel nyilvántartás"):
     st.switch_page("partner_adatok.py")
 st.write("Faktor nyilvántartás")
 # Visszalépés gomb a főoldalra (URL-váltással)
