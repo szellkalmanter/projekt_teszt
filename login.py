@@ -31,9 +31,22 @@ def generalj_teszt_adatokat():
         })
     return pd.DataFrame(ugyfelek)
 
-# --- 1. A FUNKCIÓK, AMIKET A NAVIGÁCIÓ MEGJELENÍT ---
+# Session state inicializálás
+if 'bejelentkezve' not in st.session_state:
+    st.session_state['bejelentkezve'] = False
 
-def login_felulet():
+# --- 1. FÁZIS: Ha nincs bejelentkezve (Login ablak + CSS elrejtés) ---
+if not st.session_state['bejelentkezve']:
+    # Sima CSS trükk, ami megpróbálja elrejteni a menüt
+    st.markdown(
+        """
+        <style>
+            [data-testid="stSidebarNav"] {display: none !important;}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
     st.title("🔒 Back Office Rendszer - Belépés")
     st.subheader("Kérjük, adja meg a biztonságos belépési adatokat")
     
@@ -52,7 +65,8 @@ def login_felulet():
         else:
             st.error("Hibás felhasználónév vagy jelszó!")
 
-def fooldal_tartalom():
+# --- 2. FÁZIS: Ha sikeresen bejelentkezett (A Főoldal) ---
+else:
     st.title("Főoldal")
     st.sidebar.write("Bejelentkezve: **Sikeres!**")
     
@@ -62,8 +76,9 @@ def fooldal_tartalom():
 
     st.info("Sikeresen bent vagy a rendszerben!")
     
+    # Visszaállítva a régi működő gomb a pages mappára
     if st.button("Kattints ide a Menüválasztó megnyitásához ➡️"):
-        st.switch_page("oldalak/menuvalaszto.py")
+        st.switch_page("pages/menuvalaszto.py")
         
     st.divider()
 
@@ -100,20 +115,3 @@ def fooldal_tartalom():
             st.text(logok)
         except FileNotFoundError:
             st.info("Még nem történt bejelentkezés (a napló üres).")
-
-# --- 2. SESSTION STATE ÉS DINAMIKUS NAVIGÁCIÓ KEZELÉS ---
-
-if 'bejelentkezve' not in st.session_state:
-    st.session_state['bejelentkezve'] = False
-
-if not st.session_state['bejelentkezve']:
-    # Amíg nincs belépve, CSAK a login funkció létezik, a sidebar el van rejtve ("hidden")
-    login_page = st.Page(login_felulet, title="Bejelentkezés", icon="🔒")
-    pg = st.navigation([login_page], position="hidden")
-else:
-    # Belépés után felépítjük az oldalsávos menüt az 'oldalak' mappából
-    main_page = st.Page(fooldal_tartalom, title="Főoldal", icon="🏠", default=True)
-    menu_page = st.Page("oldalak/menuvalaszto.py", title="Menüválasztó", icon="🎛️")
-    partner_page = st.Page("oldalak/partner_adatok.py", title="Partner Adatok", icon="🤝")
-    
-    pg = st.navigation([main_page, menu_page, partner_page], position="sidebar")
