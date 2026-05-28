@@ -54,7 +54,14 @@ if not st.session_state['bejelentkezve']:
     
     felhasznalonev = st.text_input("Felhasználónév")
     jelszo = st.text_input("Jelszó", type="password")
-    
+    st.markdown(
+        """
+        <style>
+            [data-testid="stSidebarNav"] {display: none !important;}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     if st.button("Belépés"):
         if felhasznalonev == "Ricsi" and jelszo == "^ZazX^{K697|":
             st.session_state['bejelentkezve'] = True
