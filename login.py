@@ -47,8 +47,7 @@ if 'bejelentkezve' not in st.session_state:
     st.session_state['bejelentkezve'] = False
 
 if not st.session_state['bejelentkezve']:
-    st.title("🔒 Back Office Rendszer - Belépés")
-    st.subheader("Kérjük, adja meg a biztonságos belépési adatokat")
+    
     
     felhasznalonev = st.text_input("Felhasználónév")
     jelszo = st.text_input("Jelszó", type="password")
