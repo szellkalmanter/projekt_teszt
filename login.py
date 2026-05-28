@@ -3,7 +3,10 @@ import pandas as pd
 from faker import Faker
 import random
 from datetime import datetime
-
+st.set_page_config(
+    page_title="Back Office Rendszer",
+    initial_sidebar_state="collapsed"  # Ez gyárilag, teljesen bezárva tartja a sidebart indításkor
+)
 # --- BIZTONSÁGI NAPLÓZÓ FUNKCIÓ ---
 def log_bejelentezes(felhasznalonev):
     most = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
