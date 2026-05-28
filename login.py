@@ -4,12 +4,6 @@ from faker import Faker
 import random
 from datetime import datetime
 
-# --- A PAGE CONFIG AZ ELSŐ DOLOG ---
-st.set_page_config(
-    page_title="Back Office Rendszer",
-    initial_sidebar_state="collapsed"
-)
-
 # --- BIZTONSÁGI NAPLÓZÓ FUNKCIÓ ---
 def log_bejelentezes(felhasznalonev):
     most = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -37,11 +31,8 @@ def generalj_teszt_adatokat():
         })
     return pd.DataFrame(ugyfelek)
 
-# Session state inicializálás
-if 'bejelentkezve' not in st.session_state:
-    st.session_state['bejelentkezve'] = False
+# --- 1. A FUNKCIÓK, AMIKET A NAVIGÁCIÓ MEGJELENÍT ---
 
-# --- 1. FUNKCIÓ: A tiszta bejelentkező ablak (Külön kezelve, hogy ne legyen 87 hiba) ---
 def login_felulet():
     st.title("🔒 Back Office Rendszer - Belépés")
     st.subheader("Kérjük, adja meg a biztonságos belépési adatokat")
@@ -61,7 +52,6 @@ def login_felulet():
         else:
             st.error("Hibás felhasználónév vagy jelszó!")
 
-# --- 2. FUNKCIÓ: A főoldal tartalma belépés után ---
 def fooldal_tartalom():
     st.title("Főoldal")
     st.sidebar.write("Bejelentkezve: **Sikeres!**")
@@ -111,13 +101,17 @@ def fooldal_tartalom():
         except FileNotFoundError:
             st.info("Még nem történt bejelentkezés (a napló üres).")
 
-# --- 3. DINAMIKUS NAVIGÁCIÓ KEZELÉS ---
+# --- 2. SESSTION STATE ÉS DINAMIKUS NAVIGÁCIÓ KEZELÉS ---
+
+if 'bejelentkezve' not in st.session_state:
+    st.session_state['bejelentkezve'] = False
+
 if not st.session_state['bejelentkezve']:
-    # Ha nincs belépve: Egyetlen virtuális oldalt csinálunk, az oldalsávot pedig TELJESEN elrejtjük (position="hidden")
+    # Amíg nincs belépve, CSAK a login funkció létezik, a sidebar el van rejtve ("hidden")
     login_page = st.Page(login_felulet, title="Bejelentkezés", icon="🔒")
     pg = st.navigation([login_page], position="hidden")
 else:
-    # Ha be van lépve: Összerakjuk a belső struktúrát a már ÁTNEVEZETT 'oldalak' mappából
+    # Belépés után felépítjük az oldalsávos menüt az 'oldalak' mappából
     main_page = st.Page(fooldal_tartalom, title="Főoldal", icon="🏠", default=True)
     menu_page = st.Page("oldalak/menuvalaszto.py", title="Menüválasztó", icon="🎛️")
     partner_page = st.Page("oldalak/partner_adatok.py", title="Partner Adatok", icon="🤝")
