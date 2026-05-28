@@ -3,11 +3,13 @@ import pandas as pd
 from faker import Faker
 import random
 from datetime import datetime
-import os
+
+# --- A PAGE CONFIG AZ ELSŐ DOLOG ---
 st.set_page_config(
     page_title="Back Office Rendszer",
-    initial_sidebar_state="collapsed"  # Ez gyárilag, teljesen bezárva tartja a sidebart indításkor
+    initial_sidebar_state="collapsed"
 )
+
 # --- BIZTONSÁGI NAPLÓZÓ FUNKCIÓ ---
 def log_bejelentezes(felhasznalonev):
     most = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -35,34 +37,18 @@ def generalj_teszt_adatokat():
         })
     return pd.DataFrame(ugyfelek)
 
-# --- 1. Bejelentkező képernyő fázis ---
+# Session state inicializálás
 if 'bejelentkezve' not in st.session_state:
-    st.markdown(
-        """
-        <style>
-            [data-testid="stSidebar"] {display: none !important;}
-            [data-testid="stSidebarCollapseButton"] {display: none !important;}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    st.title("🔒 Back Office Rendszer - Belépés")
-    st.subheader("Kérjük, adja meg a biztonságos belépési adatokat")
     st.session_state['bejelentkezve'] = False
 
-if not st.session_state['bejelentkezve']:
-    
+# --- 1. FUNKCIÓ: A tiszta bejelentkező ablak (Külön kezelve, hogy ne legyen 87 hiba) ---
+def login_felulet():
+    st.title("🔒 Back Office Rendszer - Belépés")
+    st.subheader("Kérjük, adja meg a biztonságos belépési adatokat")
     
     felhasznalonev = st.text_input("Felhasználónév")
     jelszo = st.text_input("Jelszó", type="password")
-    st.markdown(
-        """
-        <style>
-            [data-testid="stSidebarNav"] {display: none !important;}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    
     if st.button("Belépés"):
         if felhasznalonev == "Ricsi" and jelszo == "^ZazX^{K697|":
             st.session_state['bejelentkezve'] = True
@@ -75,8 +61,8 @@ if not st.session_state['bejelentkezve']:
         else:
             st.error("Hibás felhasználónév vagy jelszó!")
 
-# --- 2. Fő alkalmazás fázis (Sikeres belépés után) ---
-else:
+# --- 2. FUNKCIÓ: A főoldal tartalma belépés után ---
+def fooldal_tartalom():
     st.title("Főoldal")
     st.sidebar.write("Bejelentkezve: **Sikeres!**")
     
@@ -86,13 +72,11 @@ else:
 
     st.info("Sikeresen bent vagy a rendszerben!")
     
-    # Navigációs gomb a menüválasztó aloldalra
     if st.button("Kattints ide a Menüválasztó megnyitásához ➡️"):
         st.switch_page("oldalak/menuvalaszto.py")
         
     st.divider()
 
-    # Lapok az adatokhoz, riportokhoz és logokhoz
     tab1, tab2, tab3 = st.tabs(["📊 Adatok megtekintése", "⚙️ Excel Riport export", "🛡️ Biztonsági Napló (Logok)"])
 
     if 'adatok' not in st.session_state:
@@ -126,3 +110,16 @@ else:
             st.text(logok)
         except FileNotFoundError:
             st.info("Még nem történt bejelentkezés (a napló üres).")
+
+# --- 3. DINAMIKUS NAVIGÁCIÓ KEZELÉS ---
+if not st.session_state['bejelentkezve']:
+    # Ha nincs belépve: Egyetlen virtuális oldalt csinálunk, az oldalsávot pedig TELJESEN elrejtjük (position="hidden")
+    login_page = st.Page(login_felulet, title="Bejelentkezés", icon="🔒")
+    pg = st.navigation([login_page], position="hidden")
+else:
+    # Ha be van lépve: Összerakjuk a belső struktúrát a már ÁTNEVEZETT 'oldalak' mappából
+    main_page = st.Page(fooldal_tartalom, title="Főoldal", icon="🏠", default=True)
+    menu_page = st.Page("oldalak/menuvalaszto.py", title="Menüválasztó", icon="🎛️")
+    partner_page = st.Page("oldalak/partner_adatok.py", title="Partner Adatok", icon="🤝")
+    
+    pg = st.navigation([main_page, menu_page, partner_page], position="sidebar")
